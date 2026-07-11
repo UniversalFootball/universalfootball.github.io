@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connecting… — Universal Football</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0b0f14; color: #e8edf2; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 24px; }
+  code { background: #17202b; padding: 8px 14px; border-radius: 8px; font-size: 1.05rem; display: inline-block; margin-top: 12px; word-break: break-all; }
+  p { color: #93a1b0; }
+</style>
+</head>
+<body>
+<div>
+  <h1>Finishing connection…</h1>
+  <p id="msg">Handing off to the local authorization listener.</p>
+  <div id="fallback" style="display:none">
+    <p>Automatic handoff didn't complete. Copy this code back into your Claude session:</p>
+    <code id="code"></code>
+  </div>
+</div>
+<script>
+  (function () {
+    var qs = window.location.search;
+    var params = new URLSearchParams(qs);
+    var code = params.get('code');
+    if (code) {
+      // Forward the one-time auth code to the local listener (never leaves your machine's browser).
+      window.location.replace('http://127.0.0.1:8918/callback' + qs);
+      setTimeout(function () {
+        document.getElementById('fallback').style.display = 'block';
+        document.getElementById('code').textContent = code;
+        document.getElementById('msg').textContent = '';
+      }, 2500);
+    } else {
+      document.getElementById('msg').textContent = 'No authorization code present. Error: ' + (params.get('error') || 'unknown');
+    }
+  })();
+</script>
+</body>
+</html>
